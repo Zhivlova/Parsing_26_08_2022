@@ -2,29 +2,30 @@
 # сохранить JSON-вывод в файле *.json
 
 import requests
-from pprint import pprint
+import time
 import json
 
-url = 'https://github.com/Zhivlova?tab=repositories'
+USERNAME = 'Zhivlova'
 
-headers = {
-    'User-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/104.0.0.0 Safari/537.36)',
-    'Accept': 'application/vnd.github+json',
-    'Authorization': 'Bearer'
-
-}
-
-params = {
-    'username': 'Zhivlova',
-    'tab': 'repositories'
-}
-
-response = requests.get(url=url, headers=headers, params=params)
-pprint(response.status_code)
-names = response.json()['names']
-for name in names:
-    print(names[''])
+def get_data(url: str) -> dict:
+    while True:
+        time.sleep(1)
+        response = requests.get(url)
+        if response.status_code == 200:
+            break
+    return response.json()
 
 
+url = 'https://api.github.com/users/' + USERNAME + '/repos'
 
+response = get_data(url)
+
+repo = []
+
+for item in response:
+    repo.append(item['name'])
+print(f'Список репозиториев пользователя {USERNAME}')
+print(repo)
+
+with open('1_1_repo.json', 'w') as f:
+    json_repo = json.dump(repo, f)
